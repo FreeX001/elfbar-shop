@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { imagesStore } from "@/lib/blobs";
+import { put } from "@vercel/blob";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -8,12 +8,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "no_file" }, { status: 400 });
   }
 
-  const buffer = await file.arrayBuffer();
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const key = `${crypto.randomUUID()}.${ext}`;
 
-  const store = imagesStore();
-  await store.set(key, buffer, { metadata: { contentType: file.type || "image/jpeg" } });
+  const blob = await put(key, file, {
+    access: "public",
+    contentType: file.type || "image/jpeg",
+  });
 
-  return NextResponse.json({ url: `/api/image/${key}` });
+  return NextResponse.json({ url: blob.url });
 }
