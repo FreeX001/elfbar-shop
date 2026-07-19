@@ -1,4 +1,5 @@
 import { getDatabase } from "@netlify/database";
+import { unstable_noStore as noStore } from "next/cache";
 
 export type Series = {
   id: number;
@@ -31,12 +32,14 @@ function db() {
 
 // ---------- Settings ----------
 export async function getSetting(key: string): Promise<string | null> {
+  noStore();
   const rows = await db().sql`SELECT value FROM settings WHERE key = ${key}`;
   return rows[0]?.value ?? null;
 }
 
 export async function getAllSettings(): Promise<Record<string, string>> {
   const rows = await db().sql`SELECT key, value FROM settings`;
+  noStore();
   const out: Record<string, string> = {};
   for (const r of rows as any[]) out[r.key] = r.value;
   return out;
@@ -51,6 +54,7 @@ export async function setSetting(key: string, value: string) {
 
 // ---------- Catalog (public) ----------
 export async function listSeriesWithProducts(): Promise<SeriesWithProducts[]> {
+  noStore();
   const seriesRows = (await db().sql`
     SELECT * FROM series ORDER BY sort_order ASC, id ASC
   `) as Series[];
@@ -64,6 +68,7 @@ export async function listSeriesWithProducts(): Promise<SeriesWithProducts[]> {
 }
 
 export async function getSeriesBySlug(slug: string): Promise<SeriesWithProducts | null> {
+  noStore();
   const rows = (await db().sql`SELECT * FROM series WHERE slug = ${slug}`) as Series[];
   const s = rows[0];
   if (!s) return null;
