@@ -15,7 +15,7 @@ export default function Header() {
           href="/"
           className="font-display text-sm sm:text-xl font-bold tracking-wide neon-text truncate min-w-0"
         >
-          ELF<span className="text-neon-cyan">BAR</span>.SHOP KROP
+          ELF<span className="text-neon-cyan">BAR</span>.SHOP
         </Link>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
