@@ -13,6 +13,7 @@ export default function ProductView({ series }: { series: SeriesWithProducts }) 
   const firstInStock = products.find((p) => p.in_stock) ?? products[0];
   const [selectedId, setSelectedId] = useState(firstInStock.id);
   const [qty, setQty] = useState(1);
+  const [justAdded, setJustAdded] = useState(false);
 
   const selected = useMemo(
     () => products.find((p) => p.id === selectedId) ?? products[0],
@@ -35,6 +36,8 @@ export default function ProductView({ series }: { series: SeriesWithProducts }) 
       },
       qty
     );
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1500);
   };
 
   return (
@@ -146,19 +149,16 @@ export default function ProductView({ series }: { series: SeriesWithProducts }) 
             onClick={handleAdd}
             className="flex-1 py-3 rounded-full font-bold bg-gradient-to-r from-neon-purple to-neon-pink hover:shadow-neon transition disabled:opacity-30 disabled:pointer-events-none"
           >
-            {t.buy}
+            {justAdded ? "✓ Додано" : t.addToCart}
           </button>
           <button
-            disabled={!selected.in_stock}
-            onClick={() => {
-              handleAdd();
-              openCart();
-            }}
-            className="px-5 py-3 rounded-full font-semibold neon-border hover:shadow-neonCyan transition disabled:opacity-30 disabled:pointer-events-none"
+            onClick={openCart}
+            className="px-5 py-3 rounded-full font-semibold neon-border hover:shadow-neonCyan transition"
           >
             {t.cart}
           </button>
         </div>
+        <p className="mt-3 text-xs text-white/40">{t.addHint}</p>
       </div>
     </div>
   );
