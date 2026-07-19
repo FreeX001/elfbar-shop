@@ -9,14 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@netlify/blobs": "*",
-    "@netlify/database": "*",
+    "@neondatabase/serverless": "^0.10.1",
+    "@vercel/blob": "^0.27.0",
     "next": "14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "*",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
