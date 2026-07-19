@@ -54,7 +54,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { ...item, qty }];
     });
-    setIsOpen(true);
   };
 
   const removeItem: Ctx["removeItem"] = (productId) => {
