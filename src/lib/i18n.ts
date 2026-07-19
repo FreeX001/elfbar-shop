@@ -1,0 +1,56 @@
+export type Lang = "ua" | "ru";
+
+export const dict = {
+  ua: {
+    catalog: "Каталог",
+    home: "Головна",
+    delivery: "Доставка та оплата",
+    contacts: "Контакти",
+    inStock: "Є в наявності",
+    outOfStock: "Немає в наявності",
+    chooseFlavor: "Обери смак",
+    quantity: "Кількість",
+    buy: "Купити",
+    addToCart: "Додати у вибір",
+    cart: "Ваш вибір",
+    emptyCart: "Ви ще нічого не обрали",
+    total: "Разом",
+    writeTelegram: "Написати в Telegram",
+    remove: "Прибрати",
+    heroTitle: "Найяскравіші одноразки в місті",
+    heroSubtitle: "Обирай смак, дивись наявність, замовляй в один клік прямо в Telegram",
+    flavor: "Смак",
+    piece: "шт",
+    close: "Закрити",
+    yourOrder: "Ваше замовлення",
+    orderHint: "Натисни «Написати в Telegram» — відкриється чат із продавцем і список товарів уже буде готовий.",
+  },
+  ru: {
+    catalog: "Каталог",
+    home: "Главная",
+    delivery: "Доставка и оплата",
+    contacts: "Контакты",
+    inStock: "Есть в наличии",
+    outOfStock: "Нет в наличии",
+    chooseFlavor: "Выбери вкус",
+    quantity: "Количество",
+    buy: "Купить",
+    addToCart: "Добавить в выбор",
+    cart: "Ваш выбор",
+    emptyCart: "Вы еще ничего не выбрали",
+    total: "Итого",
+    writeTelegram: "Написать в Telegram",
+    remove: "Убрать",
+    heroTitle: "Самые яркие одноразки в городе",
+    heroSubtitle: "Выбирай вкус, смотри наличие, заказывай в один клик прямо в Telegram",
+    flavor: "Вкус",
+    piece: "шт",
+    close: "Закрыть",
+    yourOrder: "Ваш заказ",
+    orderHint: "Нажми «Написать в Telegram» — откроется чат с продавцом, список товаров уже будет готов.",
+  },
+} as const;
+
+export function t(lang: Lang) {
+  return dict[lang];
+}
