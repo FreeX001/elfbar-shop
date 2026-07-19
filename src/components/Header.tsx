@@ -12,7 +12,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 backdrop-blur bg-bg/70 border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <Link href="/" className="font-display text-xl font-bold tracking-wide neon-text">
-          ELF<span className="text-neon-cyan">BAR</span>.SHOP
+          ELF<span className="text-neon-cyan">BAR</span>.SHOP KROP
         </Link>
 
         <div className="flex items-center gap-3">
