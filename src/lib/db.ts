@@ -1,5 +1,7 @@
-import { getDatabase } from "@netlify/database";
+import { neon } from "@neondatabase/serverless";
 import { unstable_noStore as noStore } from "next/cache";
+
+const sqlClient = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL || "");
 
 export type Series = {
   id: number;
@@ -27,7 +29,7 @@ export type Product = {
 export type SeriesWithProducts = Series & { products: Product[] };
 
 function db() {
-  return getDatabase();
+  return { sql: sqlClient };
 }
 
 // ---------- Settings ----------
