@@ -39,7 +39,6 @@ export async function getSetting(key: string): Promise<string | null> {
 
 export async function getAllSettings(): Promise<Record<string, string>> {
   const rows = await db().sql`SELECT key, value FROM settings`;
-  noStore();
   const out: Record<string, string> = {};
   for (const r of rows as any[]) out[r.key] = r.value;
   return out;
@@ -79,10 +78,32 @@ export async function getSeriesBySlug(slug: string): Promise<SeriesWithProducts 
 }
 
 // ---------- Admin: series ----------
+const CYRILLIC_MAP: Record<string, string> = {
+  а: "a", б: "b", в: "v", г: "h", ґ: "g", д: "d", е: "e", є: "ie", ж: "zh", з: "z",
+  и: "y", і: "i", ї: "i", й: "i", к: "k", л: "l", м: "m", н: "n", о: "o", п: "p",
+  р: "r", с: "s", т: "t", у: "u", ф: "f", х: "kh", ц: "ts", ч: "ch", ш: "sh", щ: "shch",
+  ь: "", ъ: "", ы: "y", э: "e", ю: "iu", я: "ia",
+};
+
+export function slugify(input: string): string {
+  const lower = input.toLowerCase();
+  const translit = lower
+    .split("")
+    .map((ch) => (CYRILLIC_MAP[ch] !== undefined ? CYRILLIC_MAP[ch] : ch))
+    .join("");
+  return translit
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-") || "series";
+}
+
 export async function createSeries(data: { slug: string; name_ua: string; name_ru: string; cover_image?: string | null; sort_order?: number }) {
+  const cleanSlug = slugify(data.slug || data.name_ua || data.name_ru);
   const rows = await db().sql`
     INSERT INTO series (slug, name_ua, name_ru, cover_image, sort_order)
-    VALUES (${data.slug}, ${data.name_ua}, ${data.name_ru}, ${data.cover_image ?? null}, ${data.sort_order ?? 0})
+    VALUES (${cleanSlug}, ${data.name_ua}, ${data.name_ru}, ${data.cover_image ?? null}, ${data.sort_order ?? 0})
     RETURNING *
   `;
   return rows[0];
@@ -92,8 +113,9 @@ export async function updateSeries(id: number, data: Partial<{ slug: string; nam
   const current = (await db().sql`SELECT * FROM series WHERE id = ${id}`)[0] as Series | undefined;
   if (!current) throw new Error("Series not found");
   const merged = { ...current, ...data };
+  const cleanSlug = slugify(merged.slug);
   await db().sql`
-    UPDATE series SET slug = ${merged.slug}, name_ua = ${merged.name_ua}, name_ru = ${merged.name_ru},
+    UPDATE series SET slug = ${cleanSlug}, name_ua = ${merged.name_ua}, name_ru = ${merged.name_ru},
       cover_image = ${merged.cover_image}, sort_order = ${merged.sort_order}
     WHERE id = ${id}
   `;
